@@ -1,123 +1,121 @@
-import React from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { useState } from "react";
+import "./dashboard.css";
 
-const teachers = [
-  {
-    name: "Sarah Johnson",
-    subject: "Mathematics",
-    email: "sarah.johnson@school.edu",
-    role: "Senior Teacher",
-    roleColor: "bg-green-100 text-green-800",
-  },
-  {
-    name: "Michael Chen",
-    subject: "Physics",
-    email: "michael.chen@school.edu",
-    role: "Teacher",
-    roleColor: "bg-blue-100 text-blue-800",
-  },
-  {
-    name: "Emily Davis",
-    subject: "English Literature",
-    email: "emily.davis@school.edu",
-    role: "Department Head",
-    roleColor: "bg-purple-100 text-purple-800",
-  },
-  {
-    name: "David Rodriguez",
-    subject: "Chemistry",
-    email: "david.rodriguez@school.edu",
-    role: "Teacher",
-    roleColor: "bg-blue-100 text-blue-800",
-  },
-];
+const ManageTeachers = () => {
+  const [teachers, setTeachers] = useState([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    subject: "",
+    email: "",
+    role: "",
+  });
 
-export default function ManageTeachers() {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleAddTeacher = (e) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.subject || !formData.email || !formData.role) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    setTeachers([...teachers, formData]);
+    setFormData({ name: "", subject: "", email: "", role: "" });
+  };
+
+  const deleteTeacher = (index) => {
+    setTeachers(teachers.filter((_, i) => i !== index));
+  };
+
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold">Manage Teachers</h2>
-            <p className="text-gray-500 text-sm">
-              Add, edit, and manage teacher accounts
-            </p>
-          </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md">
-            + Add Teacher
-          </button>
-        </div>
+    <div className="dashboard-container">
+      <h2 className="dashboard-title">Manage Teachers</h2>
 
-        {/* Search Bar */}
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-semibold text-lg">All Teachers</h3>
-          <input
-            type="text"
-            placeholder="Search teachers..."
-            className="border px-3 py-2 rounded-lg w-64 shadow-sm"
-          />
-        </div>
+      {/* Add Teacher Form */}
+      <form className="teacher-form" onSubmit={handleAddTeacher}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Teacher Name"
+          value={formData.name}
+          onChange={handleChange}
+        />
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100 text-left text-sm text-gray-600">
-                <th className="p-3">Teacher Name</th>
-                <th className="p-3">Email</th>
-                <th className="p-3">Role</th>
-                <th className="p-3">Actions</th>
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject"
+          value={formData.subject}
+          onChange={handleChange}
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+        >
+          <option value="">Select Role</option>
+          <option value="Teacher">Teacher</option>
+          <option value="HOD">HOD</option>
+          <option value="Admin">Admin</option>
+        </select>
+
+        <button type="submit">Add Teacher</button>
+      </form>
+
+      {/* 👇 Teachers List (submit button ke niche) */}
+      <table className="teacher-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {teachers.length === 0 ? (
+            <tr>
+              <td colSpan="6" style={{ textAlign: "center" }}>
+                No teachers added yet
+              </td>
+            </tr>
+          ) : (
+            teachers.map((t, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{t.name}</td>
+                <td>{t.subject}</td>
+                <td>{t.email}</td>
+                <td>{t.role}</td>
+                <td>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteTeacher(index)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {teachers.map((teacher, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="p-3">
-                    <p className="font-semibold">{teacher.name}</p>
-                    <p className="text-sm text-gray-500">{teacher.subject}</p>
-                  </td>
-                  <td className="p-3 text-sm">{teacher.email}</td>
-                  <td className="p-3">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${teacher.roleColor}`}
-                    >
-                      {teacher.role}
-                    </span>
-                  </td>
-                  <td className="p-3 flex gap-3">
-                    <button className="text-blue-600 hover:text-blue-800">
-                      <Edit size={18} />
-                    </button>
-                    <button className="text-red-600 hover:text-red-800">
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-end items-center gap-2 mt-4">
-          <button className="px-3 py-1 border rounded-lg text-gray-600 hover:bg-gray-100">
-            Previous
-          </button>
-          <button className="px-3 py-1 border rounded-lg bg-blue-600 text-white">
-            1
-          </button>
-          <button className="px-3 py-1 border rounded-lg hover:bg-gray-100">
-            2
-          </button>
-          <button className="px-3 py-1 border rounded-lg hover:bg-gray-100">
-            3
-          </button>
-          <button className="px-3 py-1 border rounded-lg text-gray-600 hover:bg-gray-100">
-            Next
-          </button>
-        </div>
-      </div>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
+
+export default ManageTeachers;

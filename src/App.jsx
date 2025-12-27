@@ -10,6 +10,7 @@ import AuthProvider from "./AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
 import ManageTeachers from "./ManageTeachers";
 import ViewResultsStudent from "./ViewResultsStudent";
+import ResultsTable from "./ResultsTable"
 
 const App = () => {
   return (
@@ -70,6 +71,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ManageTeachers />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/results-table"
+            element={
+              <ProtectedRoute>
+                <ResultsTable />
               </ProtectedRoute>
             }
           />

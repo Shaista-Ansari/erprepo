@@ -74,9 +74,6 @@ export default function AdminDashboard() {
           <button className="nav-btn" onClick={() => navigate("/Results-Table")}>
             <VisibilityIcon fontSize="small" /> Results Table
           </button>
-          <button className="nav-btn" onClick={() => navigate("/settings")}>
-            <SettingsIcon fontSize="small" /> Settings
-          </button>
         </nav>
         <div className="logout-area">
           <button className="nav-btn" onClick={handleLogout}>
