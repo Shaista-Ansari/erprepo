@@ -17,13 +17,15 @@ const Login = () => {
     setError("");
 
     try {
-      // 🔐 REAL Appwrite authentication
+      // 🔥 FIX: agar pehle se login hai to logout
+      try {
+        await account.deleteSession("current");
+      } catch (_) {}
+
+      // 🔐 Login
       await account.createEmailPasswordSession(email, password);
 
-      // ✅ Auth context me user mark karo
       login(true);
-
-      // ➡️ Dashboard
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError("Invalid email or password");
