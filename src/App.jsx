@@ -18,13 +18,12 @@ const App = () => {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin", "teacher"]}>
                 <AdminDashboard />
               </ProtectedRoute>
             }
@@ -33,7 +32,7 @@ const App = () => {
           <Route
             path="/add-student-result"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin", "teacher"]}>
                 <AddStudentResult />
               </ProtectedRoute>
             }
@@ -42,7 +41,7 @@ const App = () => {
           <Route
             path="/edit-result"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin", "teacher"]}>
                 <EditResult />
               </ProtectedRoute>
             }
@@ -51,7 +50,7 @@ const App = () => {
           <Route
             path="/view-results-admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <ViewResults />
               </ProtectedRoute>
             }
@@ -60,7 +59,7 @@ const App = () => {
           <Route
             path="/view-results-student"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["student"]}>
                 <ViewResultsStudent />
               </ProtectedRoute>
             }
@@ -69,7 +68,7 @@ const App = () => {
           <Route
             path="/manage-teachers"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <ManageTeachers />
               </ProtectedRoute>
             }
@@ -78,7 +77,7 @@ const App = () => {
           <Route
             path="/results-table"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <ResultsTable />
               </ProtectedRoute>
             }

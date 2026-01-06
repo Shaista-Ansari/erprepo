@@ -41,7 +41,7 @@ const Signup = () => {
       await account.createEmailSession(email, password);
 
       alert("Signup successful");
-      navigate("/dashboard"); // change if needed
+      navigate("/"); // change if needed
     } catch (err) {
       console.error(err);
       alert(err.message || "Signup failed");

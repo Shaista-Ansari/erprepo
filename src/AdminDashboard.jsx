@@ -20,7 +20,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import SearchIcon from "@mui/icons-material/Search";
 
 export default function AdminDashboard() {
-  const { logout } = useAuth();
+  const { logout, userRole } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,27 +53,49 @@ export default function AdminDashboard() {
         <h2>Dashboard</h2>
         <p>Manage your academic results efficiently</p>
         <nav className="nav">
+
+          {(userRole === "admin" || userRole === "teacher") && (
           <button className="nav-btn active" onClick={() => navigate("/dashboard")}>
             <HomeIcon fontSize="small" /> Home
           </button>
+          )}
+
+          {(userRole === "admin" || userRole === "teacher") && (
           <button className="nav-btn" onClick={() => navigate("/add-student-result")}>
             <AddBoxIcon fontSize="small" /> Add Student Result
           </button>
+          )}
+
+          {(userRole === "admin" || userRole === "teacher") && (
           <button className="nav-btn" onClick={() => navigate("/edit-result")}>
             <EditIcon fontSize="small" /> Edit Result
           </button>
+          )}
+
+          {userRole === "admin" && (
           <button className="nav-btn" onClick={() => navigate("/view-results-admin")}>
             <VisibilityIcon fontSize="small" /> View Results (Admin)
           </button>
+          )}
+
+          {userRole === "admin" && (
           <button className="nav-btn" onClick={() => navigate("/manage-teachers")}>
             <GroupIcon fontSize="small" /> Manage Teachers
           </button>
+          )}
+
+          {(userRole === "student" || userRole === "admin" ) && (
           <button className="nav-btn" onClick={() => navigate("/view-results-student")}>
             <VisibilityIcon fontSize="small" /> View Results (Student)
           </button>
-          <button className="nav-btn" onClick={() => navigate("/Results-Table")}>
+          )}
+
+          {userRole === "admin" && (
+          <button className="nav-btn" onClick={() => navigate("/results-table")}>
             <VisibilityIcon fontSize="small" /> Results Table
           </button>
+          )}
+
         </nav>
         <div className="logout-area">
           <button className="nav-btn" onClick={handleLogout}>

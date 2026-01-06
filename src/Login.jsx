@@ -2,7 +2,8 @@ import { useState } from "react";
 import InputField from "./components/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
-import { account } from "./appwriteConfig";
+import { account, databases } from "./appwriteConfig";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,9 +25,39 @@ const Login = () => {
 
       // 🔐 Login
       await account.createEmailPasswordSession(email, password);
+      // 👤 current user nikaalo
+      const user = await account.get();
 
-      login(true);
-      navigate("/dashboard", { replace: true });
+      // 📦 DB se role lao
+      const res = await databases.listDocuments(
+        import.meta.env.VITE_DB_ID,
+        import.meta.env.VITE_USERS_COLLECTION_ID
+      );
+
+      const currentUser = res.documents.find(
+        (doc) => doc.userId === user.$id
+      );
+
+      if (!currentUser) {
+        setError("Role not assigned. Contact admin.");
+        return;
+      }
+
+      // 🔐 auth context update
+      login("demo-token", currentUser.role);
+
+      // 🚦 ROLE BASED REDIRECT
+      if (currentUser.role === "admin") {
+        navigate("/dashboard", { replace: true });
+      }
+      else if (currentUser.role === "teacher") {
+        navigate("/dashboard", { replace: true });
+      }
+      else if (currentUser.role === "student") {
+        navigate("/view-results-student", { replace: true });
+      }
+
+
     } catch (err) {
       setError("Invalid email or password");
     }
@@ -66,12 +97,6 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="signup-prompt">
-          Don&apos;t have an account?{" "}
-          <Link to="/signup" className="signup-link">
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );
